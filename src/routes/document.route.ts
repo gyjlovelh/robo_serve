@@ -16,6 +16,10 @@ router.post('/list/:collection', async (ctx, next) => {
     ctx.body = await documentService.queryDocumentList(ctx);
 }).put('/insert/:collection', async (ctx, next) => {
     ctx.body = await documentService.insertDocument(ctx);
+}).post('/delete/:collection', async (ctx, next) => {
+    ctx.body = await documentService.deleteByIds(ctx);
+}).put('/modify/:collection', async (ctx, next) => {
+    ctx.body = await documentService.update(ctx);
 });
 
 export const documentRouter = router;

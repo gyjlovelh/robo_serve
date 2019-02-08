@@ -8,6 +8,7 @@
  */
 import * as Router from 'koa-router';
 import { UserService } from '../server/user.service';
+import { ResultUtil } from '../utils/result.util';
 
 const router = new Router();
 const userService = new UserService();
@@ -18,11 +19,12 @@ router
     })
     .post('/login', async (ctx, next) => {
         const user = await userService.login(<any>ctx.request.body);
-       
-        ctx.cookies.set('user', user.data.code);
-        console.log(user.data.code);
-        // console.log(ctx.cookies.get('user'), user.data.code);
+        ctx.cookies.set('user', user.data.code, {maxAge: 7200000});
         ctx.body = user;
+    })
+    .post('/logout', async (ctx, next) => {
+        ctx.cookies.set('user', '', {maxAge: 0});
+        ctx.body = ResultUtil.success('');
     })
     .put('/register', async (ctx, next) => {
         ctx.body = await userService.register(ctx.request.body);

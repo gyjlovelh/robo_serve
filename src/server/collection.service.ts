@@ -41,6 +41,7 @@ export class CollectionService {
 
         if (user) {
             const config = user.collections[`${user.code}_${ctx.params.name}`];
+            
             return ResultUtil.success(JSON.parse(config));
         } else {
             return ResultUtil.error(-1, '未登录');

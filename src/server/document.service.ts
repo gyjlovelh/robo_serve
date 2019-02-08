@@ -7,9 +7,10 @@
  * @LastEditTime: 2019-02-03 12:28:08
  */
 import { DbService } from '../db.service';
-import { ObjectId } from 'mongodb';
+import { ObjectId, FilterQuery } from 'mongodb';
 import { Context } from 'koa';
-import { ResultUtil } from '../utils/result.util';
+import { ResultUtil, TableResult } from '../utils/result.util';
+import { QueryCondition } from '../models/query-condition.model';
 
 export class DocumentService {
 
@@ -34,20 +35,29 @@ export class DocumentService {
      */
     async queryDocumentList(ctx: Context) {
         const db = await DbService.getDatabase();
-        const queryCondition = ctx.request.body as any;
+        const queryCondition = new QueryCondition(ctx.request.body);
+
+        console.log('---', queryCondition);
+        
         const list = await db
-            .collection(ctx.params.collection)
-            .find()
-            .sort({ [queryCondition.sort]: 1 })
-            .skip(Number(queryCondition.skip))
-            .limit(Number(queryCondition.limit))
+            .collection(`${ctx.cookies.get('user')}_${ctx.params.collection}`)
+            .find(queryCondition.filters)
+            .sort(queryCondition.sort)
+            .skip(queryCondition.skip)
+            .limit(queryCondition.limit)
             .toArray();
 
-        return {
-            success: true,
-            data: list,
-            code: 0
-        };
+        const total = await db
+            .collection(`${ctx.cookies.get('user')}_${ctx.params.collection}`)
+            .find(queryCondition.filters)
+            .count();
+
+        const tr = new TableResult();
+        tr.totalCount = total;
+        tr.data = list;
+        tr.pageNum = queryCondition.current;
+        tr.pageSize = queryCondition.pagesize;
+        return ResultUtil.success(tr);
     }
 
     /**
@@ -55,7 +65,7 @@ export class DocumentService {
      */
     async insertDocument(ctx: Context) {
         const db = await DbService.getDatabase();
-        const collection: any = `${ctx.cookies.get('user')}_${ctx.params.collection}`,
+        const collection = `${ctx.cookies.get('user')}_${ctx.params.collection}`,
             doc = ctx.request.body;
 
         try {
@@ -69,8 +79,22 @@ export class DocumentService {
     /**
      * 更新文档
      */
-    async update() {
+    async update(ctx: Context) {
+        const db = await DbService.getDatabase();
+        const params = ctx.request.body as any;
+        const set = Object.create({});
+        Object.keys(params).filter(key => key !== '_id').forEach(key => {
+            set[key] = params[key];
+        });
 
+        try {
+            const doc = await db.collection(`${ctx.cookies.get('user')}_${ctx.params.collection}`)
+                .updateOne({_id: new ObjectId(params._id)}, {$set: set});
+
+                return ResultUtil.success(doc);
+        } catch (err) {
+            return ResultUtil.error(-1, err);
+        }
     }
 
     /**
@@ -83,8 +107,16 @@ export class DocumentService {
     /**
      * 批量删除
      */
-    async deleteByIds() {
-
+    async deleteByIds(ctx: Context) {
+        const db = await DbService.getDatabase();
+        const ids = (<any>ctx.request.body).map((id: string) => new ObjectId(id));
+        try {
+            await db.collection(`${ctx.cookies.get('user')}_${ctx.params.collection}`)
+            .deleteMany({_id: {$in: ids}});
+            return ResultUtil.success();
+        } catch (err) {
+            return ResultUtil.error(-1, '删除失败');
+        }   
     }
 
 }
