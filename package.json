@@ -9,6 +9,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "iwinter": "^1.1.0",
         "koa": "^2.5.3",
         "koa-bodyparser": "^4.2.1",
         "koa-convert": "^1.2.0",

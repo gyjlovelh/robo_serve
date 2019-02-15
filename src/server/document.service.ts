@@ -37,7 +37,7 @@ export class DocumentService {
         const db = await DbService.getDatabase();
         const queryCondition = new QueryCondition(ctx.request.body);
 
-        console.log('---', queryCondition);
+        console.log('headers', ctx.headers);
         
         const list = await db
             .collection(`${ctx.cookies.get('user')}_${ctx.params.collection}`)

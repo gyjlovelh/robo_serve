@@ -35,6 +35,11 @@ export class CollectionService {
         }
     }
 
+    /**
+     * 查询Collection配置
+     * 
+     * @param ctx 
+     */
     async queryCollectionConfig(ctx: Context) {
         const db = await DbService.getDatabase();
         const user = await db.collection('user').findOne({code: ctx.cookies.get('user')});

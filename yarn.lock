@@ -80,6 +80,12 @@
   dependencies:
     "@types/koa" "*"
 
+"@types/koa-router@^7.0.24":
+  version "7.0.39"
+  resolved "https://registry.npmjs.org/@types/koa-router/-/koa-router-7.0.39.tgz#6167930552e6686f7b5731aa4618cee44fec6a43"
+  dependencies:
+    "@types/koa" "*"
+
 "@types/koa-router@^7.0.32":
   version "7.0.32"
   resolved "https://registry.npmjs.org/@types/koa-router/-/koa-router-7.0.32.tgz#a2d8adc65ad3d58aeb94d056650920c085817697"
@@ -133,9 +139,17 @@
   version "10.11.7"
   resolved "https://registry.npmjs.org/@types/node/-/node-10.11.7.tgz#0e75ca9357d646ca754016ca1d68a127ad7e7300"
 
+"@types/node@^8.0.50":
+  version "8.10.40"
+  resolved "https://registry.npmjs.org/@types/node/-/node-8.10.40.tgz#4314888d5cd537945d73e9ce165c04cc550144a4"
+
 "@types/range-parser@*":
   version "1.2.2"
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.2.tgz#fa8e1ad1d474688a757140c91de6dace6f4abc8d"
+
+"@types/reflect-metadata@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/@types/reflect-metadata/-/reflect-metadata-0.0.5.tgz#9c042bfa9803d577aad4f57dfbca4b7cae4286fe"
 
 "@types/serve-static@*":
   version "1.13.2"
@@ -1054,6 +1068,17 @@ isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
 
+iwinter@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/iwinter/-/iwinter-1.1.0.tgz#61628a97ce3c8a2939a7e2cab855149a7978c598"
+  dependencies:
+    "@types/koa-router" "^7.0.24"
+    "@types/node" "^8.0.50"
+    "@types/reflect-metadata" "0.0.5"
+    koa-router "^7.2.1"
+    reflect-metadata "^0.1.10"
+    typescript "^2.6.1"
+
 json-stringify-safe@5:
   version "5.0.1"
   resolved "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
@@ -1133,7 +1158,7 @@ koa-onerror@^4.1.0:
     escape-html "^1.0.3"
     stream-wormhole "^1.1.0"
 
-koa-router@^7.4.0:
+koa-router@^7.2.1, koa-router@^7.4.0:
   version "7.4.0"
   resolved "https://registry.npmjs.org/koa-router/-/koa-router-7.4.0.tgz#aee1f7adc02d5cb31d7d67465c9eacc825e8c5e0"
   dependencies:
@@ -1640,6 +1665,10 @@ readdirp@^2.0.0:
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
 
+reflect-metadata@^0.1.10:
+  version "0.1.13"
+  resolved "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+
 regex-not@^1.0.0, regex-not@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/regex-not/-/regex-not-1.0.2.tgz#1f4ece27e00b0b65e0247a6810e6a85d83a5752c"
@@ -2021,6 +2050,10 @@ type-is@^1.6.16:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.18"
+
+typescript@^2.6.1:
+  version "2.9.2"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
 
 typescript@^3.1.2:
   version "3.1.2"

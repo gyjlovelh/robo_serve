@@ -19,11 +19,13 @@ router
     })
     .post('/login', async (ctx, next) => {
         const user = await userService.login(<any>ctx.request.body);
-        ctx.cookies.set('user', user.data.code, {maxAge: 7200000});
+        ctx.cookies.set('user', user.data.code, 
+            { maxAge: 2 * 60 * 60 * 1000, httpOnly: false, }
+        );
         ctx.body = user;
     })
     .post('/logout', async (ctx, next) => {
-        ctx.cookies.set('user', '', {maxAge: 0});
+        ctx.cookies.set('user', '', {maxAge: 0, httpOnly: false});
         ctx.body = ResultUtil.success('');
     })
     .put('/register', async (ctx, next) => {

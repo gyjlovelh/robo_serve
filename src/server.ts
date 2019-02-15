@@ -5,6 +5,9 @@ import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as koaStatic from 'koa-static';
 import * as logger from 'koa-logger';
+import IWinter from 'iwinter';
+import * as path from 'path';
+import * as Router from 'koa-router';
 import { DbService } from './db.service';
 import { api } from './routes/api';
 
@@ -15,7 +18,7 @@ app.use(bodyParser());
 // app.use(logger());
 app.use(koaStatic(__dirname + '/public'));
 
-app.keys = ['im a newer secret', 'i like turtle'];
+// app.keys = ['im a newer secret', 'i like turtle'];、
 
 // logger
 app.use(async (ctx, next) => {
@@ -32,6 +35,13 @@ app.use(async (ctx, next) => {
     ctx.set('X-Response-Time', `${ms}ms`);
 });
 
+// 引入iwinter
+// app.use(new IWinter({
+//     engine: 'koa',
+//     router: app,
+//     dir: path.join(__dirname, 'controller'),
+//     prefix: ''
+// }).controller());
 
 // 连接数据库
 // (async () => await DbService.connect())();
