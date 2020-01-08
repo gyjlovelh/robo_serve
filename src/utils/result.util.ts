@@ -1,32 +1,31 @@
-import { Message } from "./message.util";
-
 
 export class ResultUtil {
     /**
      * 成功信息
-     * 
-     * @param data 
+     *
+     * @param data
      */
     static success<T = any>(data: any = []) {
         const modal = new ResponseResult<T>();
-        modal.success = true;
         modal.data = data;
+        modal.code = 200;
+        modal.msg = 'success';
         return modal;
     }
 
     static error(code: number = -1, msg: string = "") {
         const modal = new ResponseResult();
-        modal.success = false;
-        modal.errorCode = code;
-        modal.errorMsg = msg;
+        modal.code = code;
+        modal.data = null;
+        modal.msg = msg;
         return modal;
     }
 
     static result(code: number, msg: string, data: any) {
         const modal = new ResponseResult();
-        modal.success = true;
-        modal.errorCode = code;
-        modal.errorMsg = msg;
+        modal.code = 200;
+        modal.data = data;
+        modal.msg = msg;
         return modal;
     }
 }
@@ -46,30 +45,17 @@ export class Result {
 
 export class ResponseResult<T = any> {
 
+    code: number;
+
     /**
      * 返回数据
      */
     data: T;
 
     /**
-     * 错误码
-     */
-    errorCode: string | number = '';
-
-    /**
-     * 错误等级
-     */
-    errorLevel: string = '';
-
-    /**
      * 错误消息
      */
-    errorMsg: string = '';
-
-    /**
-     * 操作是否成功
-     */
-    success: boolean = false;
+    msg: string = '';
 }
 
 
@@ -92,7 +78,13 @@ export class TableResult<T> {
 
     /**
      * 表格数据
+     * @deprecated
      */
     data: T[];
+
+    /**
+     * 表格数据
+     */
+    records: T[];
 }
 

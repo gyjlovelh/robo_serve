@@ -4,21 +4,14 @@
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as koaStatic from 'koa-static';
-import * as logger from 'koa-logger';
-import IWinter from 'iwinter';
-import * as path from 'path';
-import * as Router from 'koa-router';
-import { DbService } from './db.service';
 import { api } from './routes/api';
-
+import * as mongoose from 'mongoose';
+import {environment} from "./environments/environment";
 const app = new Koa();
 const port = 3000;
 
 app.use(bodyParser());
-// app.use(logger());
 app.use(koaStatic(__dirname + '/public'));
-
-// app.keys = ['im a newer secret', 'i like turtle'];、
 
 // logger
 app.use(async (ctx, next) => {
@@ -35,16 +28,12 @@ app.use(async (ctx, next) => {
     ctx.set('X-Response-Time', `${ms}ms`);
 });
 
-// 引入iwinter
-// app.use(new IWinter({
-//     engine: 'koa',
-//     router: app,
-//     dir: path.join(__dirname, 'controller'),
-//     prefix: ''
-// }).controller());
 
 // 连接数据库
-// (async () => await DbService.connect())();
+(async () => await mongoose.connect(`${environment.mongodbUrl}/${environment.database}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}))();
 
 /**
  * async 让方法变成异步
