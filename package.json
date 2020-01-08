@@ -19,7 +19,7 @@
         "koa-router": "^7.4.0",
         "koa-static": "^5.0.0",
         "mongodb": "^3.1.10",
-        "mongoose": "^5.8.4"
+        "mongoose": "^5.7.5"
     },
     "devDependencies": {
         "@types/koa": "^2.0.46",
