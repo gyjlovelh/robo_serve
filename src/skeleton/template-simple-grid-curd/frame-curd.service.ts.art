@@ -1,0 +1,37 @@
+import {Injectable} from "@angular/core";
+import {Validators} from "@angular/forms";
+import {OrchidFormControl, OrchidFormGroup} from "@orchid_component/form";
+
+@Injectable()
+export class {{source.identify | cameName}}CurdService {
+    private rules: OrchidFormGroup;
+    private editType: string;
+
+    constructor(
+    ) {}
+
+    public initFormSetting(editType: string) {
+        this.rules = new OrchidFormGroup();
+        this.editType = editType;
+        this.rules.customActionClass = 'orchid-drawer-actions';
+        {{each source.curdForm}}{{set item=$value}}
+        this.rules.addControl('{{item.field}}', this.get{{item.field | cameName}}Control());{{/each}}
+
+        this.rules.readonly = editType === 'view';
+
+        return this.rules;
+    }
+    {{each source.curdForm}}{{set item=$value}}
+    /**
+     * {{item.label}}
+     */
+    private get{{item.field | cameName}}Control() {
+        const control = new OrchidFormControl();
+        control.field = '{{item.field}}';
+        control.label = '{{item.label}}';
+        control.type = '{{item.type}}';
+        {{@ item | typeConfKeys}}
+
+        return control;
+    }{{/each}}
+}

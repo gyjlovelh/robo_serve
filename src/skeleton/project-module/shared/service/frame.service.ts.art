@@ -1,0 +1,22 @@
+
+import {Injectable} from "@angular/core";
+import {HttpService, RequestMsg, ResponseMsg} from "@orchid_service/http";
+import {Observable} from "rxjs";
+
+@Injectable()
+export class {{source.identify | cameName}}Service {
+
+    constructor(
+        private $http: HttpService
+    ) {}
+    {{each source.serviceList}}{{set item=$value}}
+    /**
+     * {{item.desc}}
+     */
+    public do{{item.identify | cameName}}Query(): Observable<ResponseMsg> {
+        const request = new RequestMsg();
+        request.url = '{{item.url}}';{{if item.version}}
+        request.version = '{{item.version}}';{{/if}}
+        return this.$http.{{item.method | httpMethod}}(request);
+    }{{/each}}
+}

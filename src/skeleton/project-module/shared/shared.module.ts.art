@@ -1,0 +1,14 @@
+
+import {NgModule} from "@angular/core";
+import {HttpModule} from "@orchid_service/http";
+import { {{source.identify | cameName}}Service} from "./service/{{source.identify}}.service";
+
+@NgModule({
+    imports: [
+        HttpModule
+    ],
+    providers: [
+        {{source.identify | cameName}}Service
+    ]
+})
+export class SharedModule {}

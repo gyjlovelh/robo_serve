@@ -1,0 +1,82 @@
+/**
+ * created by flavor-auto
+ * @desc {{source.name}}
+ */
+
+import {Component, OnInit} from "@angular/core";
+import {GridChangeEvent, GridColumns, GridModel, IBaseGrid} from "@orchid_component/grid";
+import {ContextService} from "@orchid_service/context";
+import { {{source.module.identify | cameName}}Service} from "../shared/service/{{source.module.identify}}.service";
+
+@Component({
+    templateUrl: './{{ source.identify }}.component.html',
+    styleUrls: ['./{{source.identify}}.component.scss']
+})
+export class {{ source.identify | cameName }}Component implements IBaseGrid, OnInit {
+    columns: GridColumns[];
+    queryParams: GridChangeEvent = new GridChangeEvent();
+    viewData: GridModel = new GridModel<any>();
+
+    primaryKey = '{{source.primaryKey}}';
+    selectedKeys: Array<any> = [];
+
+    loading = false;
+
+    constructor(
+        private $service: {{ source.moduleIdentify }}Service,
+        private $ctx: ContextService
+    ) {}
+
+    ngOnInit(): void {
+        this.initColumnsSetting();
+        this.loadGridDataSource();
+    }
+
+    initColumnsSetting(): void {
+        this.columns = [{{each source.columns}}{{set item = $value}}
+            {
+                field: '{{ item.field }}',
+                title: '{{ item.title }}',
+                width: {{ item.width }},
+                sortable: {{item.sortable | parseBoolean}},
+                filterable: {{item.filterable | parseBoolean}},
+                filterType: '{{item.filterType | frontFilterType}}',{{if item.filterType==='enum'}}
+                dropdown: this.$enumService.getCode(''),{{/if}}{{if item.filterType==='dictionary'}}
+                dropdown: this.$dictionaryService.getCode(''),{{/if}}{{if item.filterType==='httpReq'}}
+                dropdown: this.$service.queryDropdown(),{{/if}}
+                hidden: {{item.hidden | parseBoolean}}
+            },{{/each}}
+        ];
+    }
+
+    loadGridDataSource(): void {
+        this.loading = true;
+        this.$service.queryPaginationList(this.queryParams).subscribe(result => {
+            this.viewData = result.data;
+            this.loading = false;
+        }, () => this.loading = false);
+    }
+
+    onDataSourceChange(event: GridChangeEvent): void {
+        this.queryParams = event;
+        this.loadGridDataSource();
+    }
+
+    /**
+     * 新增/编辑/查看 {{source.name}}
+     * @param type
+     * @param item
+     */
+    handleCommonCurd(type: string, item?: any) {
+        const typeKv = {read: '查看', update: '修改', create: '新增'};
+        this.$ctx.openDrawer(`${typeKv[type]}{{source.name}}`, {{source.identify | cameName}}CurdComponent, {
+            nzContentParams: {
+                editType: type,
+                formModel: item
+            }
+        }).then(value => {
+            this.loadGridDataSource();
+        }).catch(() => {});
+    }
+
+}

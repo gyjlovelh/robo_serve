@@ -1,0 +1,9 @@
+
+import {Component} from "@angular/core";
+
+@Component({
+    templateUrl: './{{source.identify}}.component.html'
+})
+export class {{source.identify | cameName}}Component {
+
+}

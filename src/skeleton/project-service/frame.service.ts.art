@@ -1,0 +1,15 @@
+/**
+ * Created by guanyj on  1/7/20
+ */
+import {Injectable} from "@angular/core";
+import {HttpService, RequestMsg} from "@orchid_service/http";
+import {GridChangeEvent} from "@orchid_component/grid";
+
+@Injectable()
+export class {{source.identify | cameName}}Service {
+
+    constructor(
+        private $http: HttpService
+    ) {}
+
+}

@@ -1,0 +1,30 @@
+
+import {NgModule} from "@angular/core";
+import { {{ source.identify | cameName}}Component} from "./{{source.identify}}.component";
+import { {{ source.identify | cameName}}RoutingModule} from "./{{source.identify}}-routing.module";
+import {CommonModule} from "@angular/common";
+import {NgZorroAntdModule} from "ng-zorro-antd";
+import {OrchidGridModule} from "@orchid_component/grid";
+import {OrchidIconModule} from "@orchid_component/icon";
+import {OrchidFormModule} from "@orchid_component/form";
+import {SharedModule} from './shared/shared.module';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        {{source.identify | cameName}}RoutingModule,
+        OrchidGridModule,
+        OrchidIconModule,
+        OrchidFormModule,
+        NgZorroAntdModule,
+        CommonSharedModule,
+        SharedModule
+    ],
+    declarations: [
+        {{source.identify | cameName}}Component
+    ],
+    entryComponents: [
+
+    ]
+})
+export class {{source.identify | cameName}}Module {}

@@ -1,0 +1,20 @@
+/**
+ * Created by guanyj on  1/3/20
+ */
+import {NgModule} from "@angular/core";
+import {Route, RouterModule} from "@angular/router";
+import { {{ source.identify | cameName }}Component} from "./{{source.identify}}.component";
+
+const routes: Array<Route> = [
+
+];
+
+@NgModule({
+    imports: [
+        RouterModule.forChild(routes)
+    ],
+    exports: [
+        RouterModule
+    ]
+})
+export class {{source.identify | cameName}}RoutingModule {}

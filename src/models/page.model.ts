@@ -34,6 +34,14 @@ const pageSchema = new Schema({
         required: '{PATH} 为必填项！'
     },
 
+    frontId: {
+        type: Number,
+        unique: true,
+        required: '{PATH} 为必填项！'
+    },
+
+    accessId: String,
+
     /**
      * 前端标识Id
      */

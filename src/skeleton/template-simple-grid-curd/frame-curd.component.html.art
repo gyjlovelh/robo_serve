@@ -1,0 +1,6 @@
+<orchid-form [rules]="formRules"
+             [data]="detail"
+             (formSubmit)="handleSubmit()"
+             (formClose)="onClose()">
+
+</orchid-form>
