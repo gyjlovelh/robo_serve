@@ -14,6 +14,7 @@ import {layoutRouter} from "./layout.route";
 import {skeletonRoute} from "./skeleton.route";
 import {httpRequestRouter} from "./http-request.route";
 import {enumRouter} from "./enum.route";
+import {dictionaryRouter} from "./dictionary.route";
 
 
 const router = new Router();
@@ -25,5 +26,6 @@ router.use('/orchid_flavor/layout', layoutRouter.routes(), layoutRouter.allowedM
 router.use('/orchid_flavor/skeleton', skeletonRoute.routes(), skeletonRoute.allowedMethods());
 router.use('/orchid_flavor/httpReq', httpRequestRouter.routes(), httpRequestRouter.allowedMethods());
 router.use('/orchid_flavor/enum', enumRouter.routes(), enumRouter.allowedMethods());
+router.use('/orchid_flavor/dictionary', dictionaryRouter.routes(), dictionaryRouter.allowedMethods());
 
 export const api = router;

@@ -17,17 +17,15 @@
              (dataSourceChange)="onDataSourceChange($event)">
 
     <ng-template orchidGridLeftHeaderTemplate>
-        <button nz-button nzShape="circle" nz-tooltip nzTitle="新增模块" (click)="handleViewItem('add')">
+        {{if source.curd.includes('c')}}
+        <button nz-button nzShape="circle" nz-tooltip nzTitle="新增模块" (click)="handleCommonCurd('create')">
             <orchid-icon name="jia" size="14"></orchid-icon>
-        </button>
+        </button>{{/if}}
     </ng-template>
 
-    <ng-template orchidGridRowActionsTemplate let-row [rowWidth]="180">
-        <a class="orchid-row-item" nz-tooltip nzTitle="查看" (click)="handleViewItem('view', row)"><orchid-icon name="chakanxiangqing" size="14"></orchid-icon></a>
-        <a class="orchid-row-item" nz-tooltip nzTitle="编辑" (click)="handleViewItem('update', row)"><orchid-icon name="bianji" size="14"></orchid-icon></a>
-        <a class="orchid-row-item" nz-tooltip nzTitle="布局" (click)="openLayoutModal(row)"><orchid-icon name="gongcheng" size="14"></orchid-icon></a>
-        <a class="orchid-row-item" nz-tooltip nzTitle="预览"><orchid-icon name="kaishi" size="16"></orchid-icon></a>
-        <a class="orchid-row-item" nz-tooltip nzTitle="查看代码" (click)="handleViewPageCode(row)"><orchid-icon name="tubiaoku" size="14"></orchid-icon></a>
-        <a class="orchid-row-item" nz-tooltip nzTitle="删除" (click)="handleDeleteItem(row)"><orchid-icon name="shanchu" size="14"></orchid-icon></a>
+    <ng-template orchidGridRowActionsTemplate let-row [rowWidth]="180">{{if source.curd.includes('r')}}
+        <a class="orchid-row-item" nz-tooltip nzTitle="查看" (click)="handleCommonCurd('read', row)"><orchid-icon name="chakanxiangqing" size="14"></orchid-icon></a>{{/if}}{{if source.curd.includes('u')}}
+        <a class="orchid-row-item" nz-tooltip nzTitle="编辑" (click)="handleCommonCurd('update', row)"><orchid-icon name="bianji" size="14"></orchid-icon></a>{{/if}}{{if source.curd.includes('d')}}
+        <a class="orchid-row-item" nz-tooltip nzTitle="删除" (click)="handleCommonCurd('delete', row)"><orchid-icon name="shanchu" size="14"></orchid-icon></a>{{/if}}
     </ng-template>
 </orchid-grid>

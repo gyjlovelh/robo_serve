@@ -1,0 +1,101 @@
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgZorroAntdModule, NZ_I18N, NZ_MODAL_CONFIG, zh_CN} from 'ng-zorro-antd';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import {OrchidIconModule} from '@orchid_component/icon';
+import {OrchidAsyncContainerModule} from '@orchid_component/async-container';
+import {OrchidEchartsModule} from '@orchid_component/echarts';
+import {OrchidGridModule} from '@orchid_component/grid';
+import {OrchidFormModule} from '@orchid_component/form';
+import {OrchidLayoutModule} from '@orchid_component/layout';
+import {EventModule} from '@orchid_service/event';
+import {ContextModule} from '@orchid_service/context';
+import {DateModule} from '@orchid_service/date';
+import {HTTP_HEADERS, HTTP_REQUEST_INTERCEPTOR, HttpModule, ProxyService} from '@orchid_service/http';
+import {AuthModule} from '@orchid_service/auth';
+import {StorageModule} from '@orchid_service/storage';
+import {TpiModule} from '@orchid_service/tpi';
+import {HashLocationStrategy, LocationStrategy, registerLocaleData} from '@angular/common';
+import zh from '@angular/common/locales/zh';
+import {environment} from '../environments/environment';
+import {LoginCheatComponent} from "./login-cheat/login-cheat.component";
+import {LoginCheatService} from "./login-cheat/login-cheat.service";
+import {SystemRanchModule} from "./module/system-ranch.module";
+import {RouterModule} from "@angular/router";
+import {RequestInterceptorService} from "./request-interceptor/request-interceptor.service";
+
+registerLocaleData(zh);
+
+export function getUrlService() {
+    return new ProxyService(environment.proxy);
+}
+
+@NgModule({
+    declarations: [
+        AppComponent,
+        LoginCheatComponent
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgZorroAntdModule,
+        HttpClientModule,
+        OrchidIconModule,
+        OrchidAsyncContainerModule,
+        OrchidEchartsModule,
+        OrchidGridModule,
+        OrchidFormModule,
+        OrchidLayoutModule,
+        EventModule,
+        ContextModule,
+        DateModule,
+        HttpModule,
+        AuthModule,
+        StorageModule,
+        TpiModule,
+        RouterModule.forRoot([
+            { path: '', pathMatch: 'full', redirectTo: '/loginCheat' },
+            { path: 'loginCheat', component: LoginCheatComponent },
+        ]),
+        SystemRanchModule
+    ],
+    providers: [
+        /** 配置 ng-zorro-antd 国际化（文案 及 日期） */
+        {provide: NZ_I18N, useValue: zh_CN},
+        /** 注入开发环境联调地址 */
+        {provide: ProxyService, useFactory: getUrlService},
+        /** 全局配置模态框行为 */
+        {
+            provide: NZ_MODAL_CONFIG,
+            useValue: {
+                nzMask: true,
+                nzMaskClosable: false
+            }
+        },
+        /** 发送请求时，默认会带上注入的所有头信息 */
+        {
+            provide: HTTP_HEADERS,
+            useValue: {}
+        },
+        /** 注入自定义拦截 */
+        {
+            provide: HTTP_REQUEST_INTERCEPTOR,
+            useClass: RequestInterceptorService,
+            multi: true
+        },
+        /** 使用hash策略 */
+        {
+            provide: LocationStrategy,
+            useClass: HashLocationStrategy
+        },
+        { provide: environment.loginService, useClass: LoginCheatService }
+    ],
+    bootstrap: [AppComponent]
+})
+export class AppModule {}

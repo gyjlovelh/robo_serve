@@ -1,0 +1,52 @@
+/**
+ * Created by guanyj on  12/11/19
+ */
+import {Component} from "@angular/core";
+import {TpiLoginInput, TpiService} from "@orchid_service/tpi";
+import {Router} from "@angular/router";
+import {CommonRequestService} from "../module/shared/service/common-request/common-request.service";
+import {StorageService} from "@orchid_service/storage";
+
+@Component({
+    template: `
+        <div>
+            <input [(ngModel)]="account" placeholder="请输入账号">
+            <input [(ngModel)]="password" type="password" placeholder="请输入密码">
+            <button nz-button (click)="handleLogin()">登录</button>
+        </div>
+    `
+})
+export class LoginCheatComponent {
+
+    account = '13027193158a';
+    password = 'qq123456';
+
+    constructor(
+        private $tpi: TpiService,
+        private $router: Router,
+        private $storage: StorageService,
+        private $commonRequest: CommonRequestService
+    ) {}
+
+    handleLogin() {
+        if (this.account && this.password) {
+            const input = new TpiLoginInput();
+            input.account = this.account;
+            input.password = this.password;
+            this.$tpi.login(input).subscribe(result => {
+                this.$router.navigate(['/ranch/portal']).then(() => {
+                    // 缓存前端省市县数据
+                    this.$commonRequest.queryDistrictList().subscribe(result => {
+                        this.$storage.set('cities', result.data);
+                    });
+                    // 缓存字典数据
+                    this.$commonRequest.getDictionary().subscribe(result => {
+                        this.$storage.set('dictionary', result.data);
+                    });
+                });
+            });
+        } else {
+            alert('账号密码不能为空');
+        }
+    }
+}

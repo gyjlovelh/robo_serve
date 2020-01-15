@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+let fs = require('fs-extra');
+let path = require('path');
+let cp = require('child_process');
+
+let target_path = path.join(__dirname, '../', 'src', 'app');
+const tgzDir = path.join(__dirname, '../', 'tgz');
+fs.ensureDirSync(tgzDir);
+
+const pkg = fs.readJSONSync(path.join(target_path, 'module', 'package.json'));
+// 仿造 npm 打包格式进行命名。 [name]-[version].tgz
+let tgzName = pkg.name.split('/')[1] + '-' + pkg.version + '.tgz';
+// 打包文件存入根目录下 tgz 目录中。
+cp.execSync(`tar zcvf ${path.join(tgzDir, tgzName)}  module`, {cwd: target_path});
+
+// 移动文件夹至桌面
+const destDir = path.join('/', 'Users', 'guanyj', 'workspace', 'tgz');
+fs.ensureDirSync(destDir);
+
+console.log(destDir);
+fs.moveSync(tgzDir, destDir, {overwrite: true});

@@ -53,7 +53,9 @@ export class SkeletonUtil {
         // 1.1 转换普通类型至boolean类型
         art.defaults.imports.parseBoolean = (value: any) => !!value;
         // 1.2 identify => ComponentCameName
-        art.defaults.imports.cameName = (value: string) => `-${value}`.replace(/[-._](\w)/g, (all, letter: string) => letter.toUpperCase());
+        art.defaults.imports.cameName = (value: string) => this.getCameName(value);
+        // 1.2.1 首字母小写的驼峰命名
+        art.defaults.imports.letterCameName = (value: string) => this.getCameName(value, false);
         // 1.3 转换http请求Method
         art.defaults.imports.httpMethod = (value: string) => `${value.toLowerCase()}`;
         // 1.4 获取与前端一直的过滤类型
@@ -72,19 +74,41 @@ export class SkeletonUtil {
             return Object.keys(control)
                 .filter(key => key.startsWith(`${control.type}Conf`))
                 .filter(key => key !== optionsTypeKey)
-                .map(key => {
-                const confKey = `${key.replace(`${typeKey}_`, '')}`;
-                let confValue = control[key];
-                if (confKey === 'options') {
-                    if (control[optionsTypeKey] !== 'custom') {
-                        confValue = `this.$${control[optionsTypeKey]}Service.get('${confValue}')`;
+                .map(key => { // 如 `radioConf_optionsType`
+                    // 具体的conf字段
+                    const confKey = `${key.replace(`${typeKey}_`, '')}`;
+                    // 对应的conf配置值
+                    let confValue = control[key];
+                    // 配置radio/checkbox/dropdown的键值对取值来源
+                    if (confKey === 'options') {
+                        let apiName = '';
+                        let serverName = '';
+                        // 判断取值来源 `enum` `dictionary` `httpReq`
+                        const optionsTypeValue = control[optionsTypeKey];
+                        if (optionsTypeValue === 'enum') {
+                            serverName = '$enum';
+                            apiName = 'getEnumListByName';
+                            confValue = this.getCameName(confValue);
+                            confValue = `this.${serverName}.${apiName}(${confValue})`;
+                            return `control.${typeKey}.${confKey} = ${confValue};`;
+                        } else if (optionsTypeValue === 'dictionary') {
+                            serverName = '$dictionary';
+                            apiName = 'getDictionaryByCode';
+                            confValue = `DICTIONARY_CONST.${this.getCameName(confValue, false)}`;
+                            confValue = `this.${serverName}.${apiName}(${confValue})`;
+                            return `control.${typeKey}.${confKey} = ${confValue};`;
+                        } else if (optionsTypeValue === 'httpReq') {
+                            serverName = '$service';
+                            apiName = `${this.getCameName(confValue, false)}`;
+                            confValue = `this.${serverName}.${apiName}()`;
+                            return `${confValue}.subscribe(result => {\r\n\t\t\tcontrol.${typeKey}.${confKey} = result.data;\r\n\t\t});`;
+                        }
+                    } else {
+                        if (typeof confValue === 'string') {
+                            confValue = `'${confValue}'`;
+                        }
+                        return `control.${typeKey}.${confKey} = ${confValue};`;
                     }
-                } else {
-                    if (typeof confValue === 'string') {
-                        confValue = `'${confValue}'`;
-                    }
-                }
-                return `control.${typeKey}.${confKey} = ${confValue};`;
             }).join('\r\n\t\t');
         };
 
@@ -94,7 +118,9 @@ export class SkeletonUtil {
                 service: '.service.ts',
                 component: '.component.ts',
                 html: '.html',
-                scss: '.scss'
+                scss: '.scss',
+                json: '.json',
+                js: '.js'
             };
             let fileType = '';
             Object.keys(fileTypes).forEach(key => {
@@ -132,24 +158,12 @@ export class SkeletonUtil {
     }
 
     /**
-     * 获取文件类型
-     * @param fileName
+     * 获取驼峰命名
+     * @param value
+     * @param startUpperCase
      */
-    private getFileType(fileName: string) {
-        const fileTypes: any = {
-            module: '.module.ts',
-            service: '.service.ts',
-            component: '.component.ts',
-            html: '.html',
-            scss: '.scss'
-        };
-        let fileType = '';
-        Object.keys(fileTypes).forEach(key => {
-            if (fileName.endsWith(fileTypes[key])) {
-                fileType = key;
-            }
-        });
-        return fileType;
+    private getCameName(value: string, startUpperCase = true) {
+        return `${startUpperCase ? '-' : ''}${value}`.replace(/[-._](\w)/g, (all, letter: string) => letter.toUpperCase());
     }
 }
 

@@ -1,0 +1,18 @@
+/**
+ * Created by guanyj on  12/20/19
+ */
+import {Component} from "@angular/core";
+import {TpiService} from "@orchid_service/tpi";
+
+@Component({
+    templateUrl: './system-ranch.component.html',
+    styleUrls: ['./system-ranch.component.scss']
+})
+export class SystemRanchComponent {
+
+    constructor(private $tpi: TpiService) {}
+
+    handleLogout() {
+        this.$tpi.logout();
+    }
+}

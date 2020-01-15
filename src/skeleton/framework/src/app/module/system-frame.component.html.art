@@ -1,0 +1,25 @@
+
+<orchid-layout [siderMode]="'simple'">
+    <ng-template orchidLayoutHeaderLogoTemplate>
+        <div class="pms-logo">
+            <div class="pmg-logo-content"></div>
+        </div>
+    </ng-template>
+
+    <ng-template orchidLayoutHeaderRightTemplate>
+        <div class="pms-nav-org-select">
+            <pms-user-roles-selector></pms-user-roles-selector>
+        </div>
+        <div class="pms-nav-user-avatar">
+            <nz-dropdown>
+                <nz-avatar nz-dropdown nzShape="square" nzIcon="user"></nz-avatar>
+                <ul nz-menu>
+                    <li nz-menu-item (click)="handleLogout()">退出登录</li>
+                </ul>
+            </nz-dropdown>
+        </div>
+    </ng-template>
+
+    <!-- 路由根入口 -->
+    <router-outlet></router-outlet>
+</orchid-layout>

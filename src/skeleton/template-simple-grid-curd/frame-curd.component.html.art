@@ -1,5 +1,5 @@
 <orchid-form [rules]="formRules"
-             [data]="detail"
+             [data]="formModel"
              (formSubmit)="handleSubmit()"
              (formClose)="onClose()">
 

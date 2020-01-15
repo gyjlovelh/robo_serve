@@ -1,0 +1,27 @@
+/**
+ * Created by guanyj on  12/9/19
+ */
+import {NgModule} from "@angular/core";
+
+@NgModule({
+    imports: [
+        CommonModule
+    ],
+    declarations: [
+
+    ],
+    exports: [
+
+    ],
+    providers: [
+        CommonRequestService,
+        { provide: 'tpi.menu', useClass: TpiRanchService, multi: true },
+        { provide: 'tpi.menu', useClass: TpiPortalService, multi: true },
+        { provide: 'tpi.menu', useClass: TpiPasturelandService, multi: true },
+        { provide: 'tpi.menu', useClass: TpiPlanService, multi: true },
+        { provide: 'tpi.menu', useClass: TpiReceiptsService, multi: true },
+        { provide: 'tpi.menu', useClass: TpiLogService, multi: true },
+        { provide: 'tpi.menu', useClass: TpiFacilityService, multi: true }
+    ]
+})
+export class SharedModule {}

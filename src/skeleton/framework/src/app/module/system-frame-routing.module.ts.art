@@ -1,0 +1,38 @@
+/**
+ * Created by guanyj on  12/20/19
+ */
+import {NgModule} from "@angular/core";
+import {RouterModule, Routes} from "@angular/router";
+import {SystemRanchComponent} from "./system-ranch.component";
+
+const routes: Routes = [
+    {
+        path: 'ranch',
+        component: SystemRanchComponent,
+        children: [
+            { path: '', pathMatch: 'full', redirectTo: '/ranch/portal' },
+            /** 首页 */
+            { path: 'portal', loadChildren: './portal/portal.module#PortalModule' },
+            /** 牧场管理 */
+            { path: 'pastureland', loadChildren: './pastureland/pastureland.module#PasturelandModule' },
+            /** 消息日志 */
+            { path: 'log', loadChildren: './log/log.module#LogModule' },
+            /** 计划管理 */
+            { path: 'plan', loadChildren: './plan/plan.module#PlanModule' },
+            /** 业务单据 */
+            { path: 'receipts', loadChildren: './receipts/receipts.module#ReceiptsModule' },
+            /** 设备资产 */
+            { path: 'facility', loadChildren: './facility/facility.module#FacilityModule' }
+        ]
+    },
+];
+
+@NgModule({
+    imports: [
+        RouterModule.forChild(routes)
+    ],
+    exports: [
+        RouterModule
+    ]
+})
+export class SystemRanchRoutingModule {}

@@ -1,0 +1,136 @@
+
+import {Injectable} from "@angular/core";
+import {Observable} from "rxjs";
+import {Version} from "../module/shared/enum/version.enum";
+import {StorageService} from '@orchid_service/storage';
+import {HttpService, RequestMsg, ResponseMsg} from '@orchid_service/http';
+import {JSEncrypt} from 'jsencrypt';
+import {ITpiLogin, TpiLoginInput, TpiLoginResponse} from "@orchid_service/tpi";
+import {EventService} from "@orchid_service/event";
+import {ContextService} from "@orchid_service/context";
+
+@Injectable()
+export class LoginCheatService implements ITpiLogin {
+
+    constructor(
+        private $storage: StorageService,
+        private $http: HttpService,
+        private $event: EventService,
+        private $ctx: ContextService
+    ) {}
+
+    login(input: TpiLoginInput): Observable<TpiLoginResponse> {
+        return Observable.create(observer => {
+            // 登录之前，清空缓存
+            this.$storage.clear();
+            this.getDefaultKaptcha().subscribe(result => {
+                const request = new RequestMsg();
+                const encrypt = new JSEncrypt();
+                // 设置公钥
+                encrypt.setPublicKey(result.data.key);
+                request.url = '/orchid-unify/auth/login/pc';
+                // 对密码加密
+                request.body = {account: input.account, password: encrypt.encrypt(input.password)};
+                request.version = Version.v1;
+
+                this.$http.post(request).subscribe(result => {
+                    const response = new TpiLoginResponse();
+                    response.token = result.data;
+                    // 添加伪用户，欺骗前端对用户的校验。且在下一次请求接口时，能拿到token
+                    response.user = {username: '伪用户'};
+                    this.$storage.set('user.info', response);
+                    this.queryUserInfo(result.data).subscribe(result => {
+                        // 缓存当前用户详情
+                        let userInfo;
+                        if (result.data.userReponseDetail && result.data.userReponseDetail.length > 0) {
+                            userInfo = result.data.userReponseDetail[0];
+                            response.config.set('roles', result.data.userReponseDetail);
+                        } else {
+                            // 如果没有配置角色权限
+                            userInfo = result.data.userDetail;
+                        }
+                        response.user = userInfo;
+
+                        // 发布当前用户角色信息
+                        this.$event.publish('wms.event.cache.user.info', userInfo);
+
+                        // 发布用户角色信息
+                        this.$event.publish('wms.event.cache.user.roles', result.data.userReponseDetail);
+
+                        // 缓存该用户拥有的机构列表, 默认为第一个角色
+                        this.queryPermissionList(userInfo).subscribe(result => {
+                            // 缓存用户拥有的菜单权限
+                            const permissionList = [];
+                            (function getPermissionCode(list) {
+                                list.forEach(item => {
+                                    permissionList.push(item.code);
+                                    if (item.children && item.children.length > 0) {
+                                        getPermissionCode(item.children);
+                                    }
+                                });
+                            })(result.data);
+                            // 发布权限变更信息
+                            this.$ctx.setPermissionSetting(permissionList, response.user.organizationId || response.user.memberId, []);
+
+                            observer.next(response);
+                            observer.complete();
+                        });
+                    });
+                }, (error) => {
+                    observer.error(error);
+                    observer.complete();
+                });
+            });
+        });
+    }
+
+    logout(): Observable<string> {
+        return Observable.create(observer => {
+            observer.next();
+            observer.complete();
+        });
+    }
+
+    /**
+     * 查询用户信息
+     * @returns {Observable<ResponseMsg<userInfo>>}
+     */
+    private queryUserInfo(token: string): Observable<ResponseMsg<any>> {
+        const request = new RequestMsg();
+        request.url = '/orchid-unify/auth/userinfo';
+        request.body = {
+            token
+        };
+        request.version = Version.v1;
+        return this.$http.post(request);
+    }
+
+    /**
+     * 查询公钥
+     * @returns {Observable<ResponseMsg>}
+     */
+    private getDefaultKaptcha(): Observable<ResponseMsg> {
+        const request = new RequestMsg();
+        request.url = '/orchid-unify/auth/login/defaultKaptcha';
+        request.version = Version.v1;
+
+        return this.$http.post(request);
+    }
+
+    /**
+     * 查询权限列表
+     * @param {UserModel} user
+     * @returns {Observable<ResponseMsg>}
+     */
+    private queryPermissionList(user: any): Observable<ResponseMsg> {
+        const request = new RequestMsg();
+        request.url = '/orchid-unify/auth/resource';
+        request.body = {
+            memberId: user.memberId,
+            organizationId: user.organizationId
+        };
+        request.version = Version.v1;
+
+        return this.$http.post(request);
+    }
+}

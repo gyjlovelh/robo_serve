@@ -1,0 +1,9 @@
+{
+    "name": "@orchid_module/ranch",
+    "version": "1.0.0",
+    "dependencies": {},
+    "files": [
+        "index.ts",
+        "package.json"
+    ]
+}

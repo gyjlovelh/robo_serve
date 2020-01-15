@@ -28,7 +28,7 @@ export class DbService {
         }
 
         const client = await connect(environment.mongodbUrl, { useNewUrlParser: true });
-        // DbService.database = client.db(environment.database);
+        // DbService.database = client.db(environmentTs.database);
         return DbService.database;
     }
 

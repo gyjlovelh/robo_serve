@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {OrchidFormGroup} from "@orchid_component/form";
-import { {{source.identify | cameName}}Service} from "../../shared/service/{{source.identify}}.service";
+import { {{source.module.identify | cameName}}Service} from "../../shared/service/{{source.module.identify}}.service";
 import {ContextService} from "@orchid_service/context";
 import { {{source.identify | cameName}}CurdService} from "./{{source.identify}}-curd.service";
 
@@ -13,7 +13,7 @@ export class {{source.identify | cameName}}CurdComponent implements OnInit {
 
     formRules: OrchidFormGroup;
 
-    @Input() detail: any;
+    @Input() formModel: any;
     @Input() editType = 'add';
 
     /** 通用抽屉输入属性 */
@@ -22,21 +22,25 @@ export class {{source.identify | cameName}}CurdComponent implements OnInit {
 
     constructor(
         private $form: {{source.identify | cameName}}CurdService,
-        private $ctx: ContextService
+        private $ctx: ContextService,
+        private $service: {{source.module.identify | cameName}}Service
     ) {}
 
     ngOnInit(): void {
         this.formRules = this.$form.initFormSetting(this.editType);
     }
 
-    handleSubmit() {
+    /**
+     * 点击确认回调事件
+     */
+    public handleSubmit(): void {
         if (this.editType === 'add') {
-            this.$service.addItem(this.formRules.value).subscribe(result => {
+            this.$service.do{{source.httpReqAdd | cameName}}(this.formRules.value).subscribe(result => {
                 this.$ctx.successMsg(result.msg);
                 this.onSubmit();
             });
         } else {
-            this.$service.updateItem(this.formRules.value).subscribe(result => {
+            this.$service.do{{source.httpReqUpdate | cameName}}(this.formRules.value).subscribe(result => {
                 this.$ctx.successMsg(result.msg);
                 this.onSubmit();
             });

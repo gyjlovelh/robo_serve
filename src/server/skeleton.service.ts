@@ -99,4 +99,17 @@ export class SkeletonService {
             return ResultUtil.error(500, '系统错误');
         }
     }
+
+    /**
+     * 生成工程应用的代码骨架
+     */
+    async generateFramework() {
+        try {
+            const frameworkTemplate: Array<any> = await this.util.resolveFramework('framework', {identify: 'pms'}, {content: JSON.stringify({name: '123'})});
+            return ResultUtil.success(frameworkTemplate);
+        } catch (e) {
+            console.error(e);
+            return ResultUtil.error(500, '系统错误');
+        }
+    }
 }

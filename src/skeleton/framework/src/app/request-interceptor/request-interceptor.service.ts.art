@@ -1,0 +1,31 @@
+/**
+ * Created by guanyj on  7/16/19
+ */
+import {Injectable} from "@angular/core";
+import {HttpHeaders} from "@angular/common/http";
+import { HttpRequestInterceptor } from '@orchid_service/http';
+import {ContextService} from "@orchid_service/context";
+import {environment} from "../../environments/environment";
+
+@Injectable()
+export class RequestInterceptorService implements HttpRequestInterceptor {
+
+    constructor(
+        private $ctx: ContextService
+    ) {}
+
+    /**
+     * 自定义请求拦截器，只对请求头做处理
+     */
+    interceptor(): HttpHeaders {
+        let header = new HttpHeaders()
+            .set('appName', environment.appName);
+        const userInfo = this.$ctx.getUserInfo();
+        if (userInfo) {
+            header = header.append('memberId', userInfo.user.memberId || 0)
+                .append('organizationId', userInfo.user.organizationId || 0);
+        }
+        return header;
+    }
+
+}

@@ -1,6 +1,9 @@
 import {Injectable} from "@angular/core";
 import {Validators} from "@angular/forms";
+import {I18nService} from "@orchid_service/i18n";
+import {EnumService, DictionaryService} from "@orchid_service/utils";
 import {OrchidFormControl, OrchidFormGroup} from "@orchid_component/form";
+import { {{source.module.identify | cameName}}Service } from '../../../shared/service/{{source.module.identify}}.service';
 
 @Injectable()
 export class {{source.identify | cameName}}CurdService {
@@ -8,6 +11,10 @@ export class {{source.identify | cameName}}CurdService {
     private editType: string;
 
     constructor(
+        private $i18n: I18nService,
+        private $enum: EnumService,
+        private $dictionary: DictionaryService,
+        private $service: {{source.module.identify | cameName}}Service
     ) {}
 
     public initFormSetting(editType: string) {
@@ -23,15 +30,25 @@ export class {{source.identify | cameName}}CurdService {
     }
     {{each source.curdForm}}{{set item=$value}}
     /**
-     * {{item.label}}
+     * 创建 {{item.mark}} 表单项规则
      */
-    private get{{item.field | cameName}}Control() {
+    private get{{item.field | cameName}}Control(): OrchidFormControl {
         const control = new OrchidFormControl();
         control.field = '{{item.field}}';
-        control.label = '{{item.label}}';
+        control.label = this.$i18n.translate('{{item.label}}');
         control.type = '{{item.type}}';
-        {{@ item | typeConfKeys}}
+        {{@ item | typeConfKeys}}{{if item.rules && item.rules.required}}
+        control.required = true;{{/if}}
+        control.setValidators([{{if item.rules && item.rules.required}}
+            Validators.required;{{/if}}{{if item.rules.minLength}}
+            Validators.minLength({{item.rules.minLength}});{{/if}}{{if item.rules.maxLength}}
+            Validators.maxLength({{item.rules.maxLength}});{{/if}}{{if item.rules.min}}
+            Validators.min({{item.rules.min}});{{/if}}{{if item.rules.max}}
+            Validators.max({{item.rules.max}});{{/if}}{{if item.rules.pattern}}
+            Validators.pattern({{item.rules.pattern}});{{/if}}
+        ]);
 
         return control;
-    }{{/each}}
+    }
+    {{/each}}
 }

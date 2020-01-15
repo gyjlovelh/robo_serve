@@ -6,7 +6,14 @@
 import {Component, OnInit} from "@angular/core";
 import {GridChangeEvent, GridColumns, GridModel, IBaseGrid} from "@orchid_component/grid";
 import {ContextService} from "@orchid_service/context";
-import { {{source.module.identify | cameName}}Service} from "../shared/service/{{source.module.identify}}.service";
+import {I18nService} from "@orchid_service/i18n";
+import {EnumService, DictionaryService} from "@orchid_service/utils"
+import { {{source.module.identify | cameName}}Service } from "../shared/service/{{source.module.identify}}.service";
+
+/** enum-import */{{each source.columns}}{{set item=$value}}{{if item.filterType==='enum'}}
+import { {{item.type_enumCode | cameName}}Enum } from '../../shared/enum/{{item.type_enumCode}}.enum';{{/if}}{{/each}}
+/** dictionary */
+import {DICTIONARY_CONST} from '../../shared/const/dictionary-const';
 
 @Component({
     templateUrl: './{{ source.identify }}.component.html',
@@ -24,7 +31,10 @@ export class {{ source.identify | cameName }}Component implements IBaseGrid, OnI
 
     constructor(
         private $service: {{ source.moduleIdentify }}Service,
-        private $ctx: ContextService
+        private $ctx: ContextService,
+        private $i18n: I18nService,
+        private $dictionary: DictionaryService,
+        private $enum: EnumService
     ) {}
 
     ngOnInit(): void {
@@ -36,14 +46,14 @@ export class {{ source.identify | cameName }}Component implements IBaseGrid, OnI
         this.columns = [{{each source.columns}}{{set item = $value}}
             {
                 field: '{{ item.field }}',
-                title: '{{ item.title }}',
+                title: this.$i18n.translate('{{ item.title }}'),
                 width: {{ item.width }},
                 sortable: {{item.sortable | parseBoolean}},
                 filterable: {{item.filterable | parseBoolean}},
                 filterType: '{{item.filterType | frontFilterType}}',{{if item.filterType==='enum'}}
-                dropdown: this.$enumService.getCode(''),{{/if}}{{if item.filterType==='dictionary'}}
-                dropdown: this.$dictionaryService.getCode(''),{{/if}}{{if item.filterType==='httpReq'}}
-                dropdown: this.$service.queryDropdown(),{{/if}}
+                dropdown: this.$enum.getEnumListByName({{item.type_enumCode | cameName}}Enum),{{/if}}{{if item.filterType==='dictionary'}}
+                dropdown: this.$dictionary.getDictionaryByCode(DICTIONARY_CONST.{{item.type_dictionaryCode | letterCameName}}),{{/if}}{{if item.filterType==='httpReq'}}
+                dropdown: this.$service.{{item.type_httpReq | letterCameName}}(),{{/if}}
                 hidden: {{item.hidden | parseBoolean}}
             },{{/each}}
         ];
@@ -51,7 +61,7 @@ export class {{ source.identify | cameName }}Component implements IBaseGrid, OnI
 
     loadGridDataSource(): void {
         this.loading = true;
-        this.$service.queryPaginationList(this.queryParams).subscribe(result => {
+        this.$service.do{{source.httpReqList | cameName}}(this.queryParams).subscribe(result => {
             this.viewData = result.data;
             this.loading = false;
         }, () => this.loading = false);
@@ -63,20 +73,27 @@ export class {{ source.identify | cameName }}Component implements IBaseGrid, OnI
     }
 
     /**
-     * 新增/编辑/查看 {{source.name}}
-     * @param type
-     * @param item
+     * 新增/编辑/查看/删除 {{source.name}}
+     * @param type {string}
+     * @param item {any}
      */
     handleCommonCurd(type: string, item?: any) {
-        const typeKv = {read: '查看', update: '修改', create: '新增'};
-        this.$ctx.openDrawer(`${typeKv[type]}{{source.name}}`, {{source.identify | cameName}}CurdComponent, {
-            nzContentParams: {
-                editType: type,
-                formModel: item
-            }
-        }).then(value => {
-            this.loadGridDataSource();
-        }).catch(() => {});
+        if (type === 'delete') {
+            this.$service.{{source.httpReqDelete | letterCameName}}(item.{{source.primaryKey}}).subscribe(result => {
+                this.$ctx.success(result.msg);
+                this.loadGridDataSource();
+            });
+        } else {
+            const typeKv = {read: '查看', update: '修改', create: '新增'};
+            this.$ctx.openDrawer(`${typeKv[type]}{{source.name}}`, {{source.identify | cameName}}CurdComponent, {
+                nzContentParams: {
+                    editType: type,
+                    formModel: item
+                }
+            }).then(value => {
+                this.loadGridDataSource();
+            }).catch(() => {});
+        }
     }
 
 }

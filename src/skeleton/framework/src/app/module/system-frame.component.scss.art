@@ -1,0 +1,29 @@
+
+.pms-logo {
+  height: 100%;
+  background-size: 48px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  //background: url("../assets/image/logo.png") no-repeat;
+  //background-size: cover;
+  //background-position: center;
+
+  .pmg-logo-content {
+    background: #dfdfdf;
+    height: 28px;
+    width: 100%;
+    border-radius: 2px;
+  }
+}
+
+.pms-nav-org-select {
+  display: inline-block;
+}
+
+.pms-nav-user-avatar {
+  display: inline-block;
+  margin-left: 20px;
+  margin-right: 30px;
+}

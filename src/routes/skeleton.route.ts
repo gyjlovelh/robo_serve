@@ -13,6 +13,8 @@ router.post('/view/:type', async (ctx, next) => {
         ctx.body = await skeletonService.generateModuleCode((ctx.request.body as any).id);
     } else if (type === 'page') {
         ctx.body = await skeletonService.generateLayoutCode((ctx.request.body as any).id);
+    } else if (type === 'framework') {
+        ctx.body = await skeletonService.generateFramework();
     }
 })
 
