@@ -58,6 +58,14 @@ const pageSchema = new Schema({
     },
 
     /**
+     * 所属项目
+     */
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
+
+    /**
      * 页面路由
      */
     path: {
@@ -78,6 +86,13 @@ const pageSchema = new Schema({
      * 描述
      */
     desc: String
+}, {
+    timestamps: {
+        createdAt: 'created',
+        updatedAt: 'updated'
+    },
+    versionKey: false
 });
+
 
 export const PageModel = model('Page', pageSchema);

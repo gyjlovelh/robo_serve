@@ -1,5 +1,5 @@
 {
-    "name": "pms-pastureland",
+    "name": "{{source.identify}}",
     "version": "1.0.0",
     "scripts": {
         "ng": "ng",
@@ -8,8 +8,6 @@
         "start:proxy": "ng serve --host 0.0.0.0 --port 4201 --proxy-config proxy.config.json",
         "build": "node ci-script/publish.js",
         "build:prod": "ng build --prod --build-optimizer --base-href=/",
-        "build:analyzer": "ng build --stats-json && webpack-bundle-analyzer dist/pms-pastureland/stats.json",
-        "compodoc": "./node_modules/.bin/compodoc -p src/tsconfig.app.json",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"

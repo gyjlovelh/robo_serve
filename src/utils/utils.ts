@@ -5,6 +5,21 @@ import {FilterDescriptor, FilterOperatorDescriptor, SortEvent} from "./grid.mode
 
 export class Utils {
 
+    // 平铺数组 -> 树形结构
+    // todo
+    flatToLinkList(list: Array<any>, primaryKey: string, childrenKey: string): Array<any> {
+        const kvMap: any = {};
+        const temp = [];
+        list.forEach((item) => {
+            if (item[primaryKey]) {
+                kvMap[item[primaryKey]].push();
+            } else {
+                temp.push(item);
+            }
+        });
+        return [];
+    }
+
     resolveGridFilters(filters: Array<FilterDescriptor>) {
         const query: any = {};
         filters.forEach(filter => {

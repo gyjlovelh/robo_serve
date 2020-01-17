@@ -6,6 +6,14 @@
 import {Schema, model} from 'mongoose';
 
 const DictionarySchema = new Schema({
+    /**
+     * 所属项目
+     */
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
+
     identify: {
         type: String,
         required: '{PATH} 为必填项！',
@@ -20,6 +28,12 @@ const DictionarySchema = new Schema({
         type: String,
         required: '{PATH} 为必填项！',
     }
+}, {
+    timestamps: {
+        createdAt: 'created',
+        updatedAt: 'updated'
+    },
+    versionKey: false
 });
 
 

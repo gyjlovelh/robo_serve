@@ -1,5 +1,5 @@
 {
-    "name": "@orchid_module/ranch",
+    "name": "@orchid_module/{{source.identify}}",
     "version": "1.0.0",
     "dependencies": {},
     "files": [

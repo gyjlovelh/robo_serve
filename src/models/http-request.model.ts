@@ -6,6 +6,14 @@ import {Schema, model} from 'mongoose';
 
 const HttpRequestSchema = new Schema({
 
+    /**
+     * 所属项目
+     */
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
+
     // 标识[用于文件命名]
     identify: {
         type: String,
@@ -41,8 +49,13 @@ const HttpRequestSchema = new Schema({
         type: String,
         default: 'POST'
     },
-
-
+}, {
+    timestamps: {
+        createdAt: 'created',
+        updatedAt: 'updated'
+    },
+    versionKey: false
 });
+
 
 export const HttpRequestModel = model('HttpRequest', HttpRequestSchema);

@@ -1,6 +1,5 @@
 export const environment = {
     production: true,
-    appName: 'pms_pc',
-    loginService: 'tpi.login.prod',
+    appName: '{{source.appName}}',
     proxy: {}
 };

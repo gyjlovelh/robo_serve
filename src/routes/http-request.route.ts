@@ -10,15 +10,15 @@ const router = new Router();
 const httpRequestService = new HttpRequestService();
 
 router.post('/list', async (ctx, next) => {
-    ctx.body = await httpRequestService.queryPagingList(ctx.request.body as GridChangeEvent);
+    ctx.body = await httpRequestService.inject(ctx).queryPagingList(ctx.request.body as GridChangeEvent);
 }).post('/add', async (ctx, next) => {
-    ctx.body = await httpRequestService.addItem(ctx.request.body);
+    ctx.body = await httpRequestService.inject(ctx).addItem(ctx.request.body);
 }).post('/update', async (ctx, next) => {
     ctx.body = await httpRequestService.updateItem(ctx.request.body);
 }).post('/delete', async (ctx, next) => {
     ctx.body = await httpRequestService.deleteItemById(ctx.query._id);
 }).post('/all', async (ctx, next) => {
-    ctx.body = await httpRequestService.getFullList();
+    ctx.body = await httpRequestService.inject(ctx).getFullList();
 })
 
 

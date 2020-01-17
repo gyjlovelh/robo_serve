@@ -58,6 +58,25 @@ export class SkeletonUtil {
         art.defaults.imports.letterCameName = (value: string) => this.getCameName(value, false);
         // 1.3 转换http请求Method
         art.defaults.imports.httpMethod = (value: string) => `${value.toLowerCase()}`;
+        // 数组去重
+        art.defaults.imports.distinct = (list: any, primaryKey: string) => {
+            let result = [];
+            let obj: any = {};
+            for (let item of list) {
+                if (primaryKey) {
+                    if (!obj[item[primaryKey]]) {
+                        result.push(item);
+                        obj[item[primaryKey]] = 1;
+                    }
+                } else {
+                    if (!obj[item]) {
+                        result.push(item);
+                        obj[item] = 1;
+                    }
+                }
+            }
+            return result;
+        };
         // 1.4 获取与前端一直的过滤类型
         art.defaults.imports.frontFilterType = (value: string) => ({
             string: 'string',

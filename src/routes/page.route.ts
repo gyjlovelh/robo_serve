@@ -12,15 +12,15 @@ const pageService = new PageService();
 const layoutService = new LayoutService();
 
 router.post('/list', async (ctx, next) => {
-    ctx.body = await pageService.queryPagingList(ctx.request.body as GridChangeEvent);
+    ctx.body = await pageService.inject(ctx).queryPagingList(ctx.request.body as GridChangeEvent);
 }).post('/add', async (ctx, next) => {
-    ctx.body = await pageService.addItem(ctx.request.body);
+    ctx.body = await pageService.inject(ctx).addItem(ctx.request.body);
 }).post('/update', async (ctx, next) => {
     ctx.body = await pageService.updateItem(ctx.request.body);
 }).post('/delete', async (ctx, next) => {
     ctx.body = await pageService.deleteItemById(ctx.query._id);
 }).post('/all', async (ctx, next) => {
-    ctx.body = await pageService.getFullList();
+    ctx.body = await pageService.inject(ctx).getFullList();
 }).post('/layout/:id', async (ctx, next) => {
     ctx.body = await layoutService.findByPageId(ctx.params.id);
 });

@@ -6,15 +6,15 @@ const router = new Router();
 const dictionaryService = new DictionaryService();
 
 router.post('/list', async (ctx, next) => {
-    ctx.body = await dictionaryService.queryPagingList(ctx.request.body as GridChangeEvent);
+    ctx.body = await dictionaryService.inject(ctx).queryPagingList(ctx.request.body as GridChangeEvent);
 }).post('/add', async (ctx, next) => {
-    ctx.body = await dictionaryService.addItem(ctx.request.body);
+    ctx.body = await dictionaryService.inject(ctx).addItem(ctx.request.body);
 }).post('/update', async (ctx, next) => {
     ctx.body = await dictionaryService.updateItem(ctx.request.body);
 }).post('/delete', async (ctx, next) => {
     ctx.body = await dictionaryService.deleteItemById(ctx.query._id);
 }).post('/all', async (ctx, next) => {
-    ctx.body = await dictionaryService.getFullList();
+    ctx.body = await dictionaryService.inject(ctx).getFullList();
 })
 
 

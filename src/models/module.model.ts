@@ -18,6 +18,14 @@ const moduleSchema = new Schema({
     },
 
     /**
+     * 所属项目
+     */
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
+
+    /**
      * 模块标识
      */
     identify: {
@@ -63,6 +71,13 @@ const moduleSchema = new Schema({
      * 描述
      */
     desc: String
+}, {
+    timestamps: {
+        createdAt: 'created',
+        updatedAt: 'updated'
+    },
+    versionKey: false
 });
+
 
 export const ModuleModel = model('Module', moduleSchema);

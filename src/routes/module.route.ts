@@ -10,15 +10,15 @@ const router = new Router();
 const moduleService = new ModuleService();
 
 router.post('/list', async (ctx, next) => {
-    ctx.body = await moduleService.queryPagingList(ctx.request.body as GridChangeEvent);
+    ctx.body = await moduleService.inject(ctx).queryPagingList(ctx.request.body as GridChangeEvent);
 }).post('/add', async (ctx, next) => {
-    ctx.body = await moduleService.addItem(ctx.request.body);
+    ctx.body = await moduleService.inject(ctx).addItem(ctx.request.body);
 }).post('/update', async (ctx, next) => {
-    ctx.body = await moduleService.updateItem(ctx.request.body);
+    ctx.body = await moduleService.inject(ctx).updateItem(ctx.request.body);
 }).post('/delete', async (ctx, next) => {
-    ctx.body = await moduleService.deleteItemById(ctx.query._id);
+    ctx.body = await moduleService.inject(ctx).deleteItemById(ctx.query._id);
 }).post('/all', async (ctx, next) => {
-    ctx.body = await moduleService.getFullList();
+    ctx.body = await moduleService.inject(ctx).getFullList();
 })
 
 

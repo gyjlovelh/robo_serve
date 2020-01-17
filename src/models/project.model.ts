@@ -1,18 +1,10 @@
 /**
- * Created by guanyj on  1/7/20
+ * Created by guanyj on  1/16/20
  */
 import {Schema, model} from 'mongoose';
 
-const i18nSchema = new Schema({
-    /**
-     * 所属项目
-     */
-    project: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project'
-    },
-
-    field: {
+const projectSchema = new Schema({
+    identify: {
         type: String,
         unique: true,
         lowercase: true,
@@ -20,13 +12,18 @@ const i18nSchema = new Schema({
         required: '{PATH} 为必填项！'
     },
 
-    zh: {
+    name: {
         type: String,
         unique: true,
         required: '{PATH} 为必填项！'
     },
 
-    en: String
+    desc: String,
+
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 }, {
     timestamps: {
         createdAt: 'created',
@@ -36,4 +33,4 @@ const i18nSchema = new Schema({
 });
 
 
-export const I18nModel = model('I18n', i18nSchema);
+export const ProjectModel = model('Project', projectSchema);

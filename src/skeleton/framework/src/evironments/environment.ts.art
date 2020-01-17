@@ -5,7 +5,7 @@
 
 export const environment = {
     production: false,
-    appName: 'pms_pc',
+    appName: '{{source.appName}}',
     // mock数据接口
     // 如果以代理的方式运行项目,优先匹配此处配置。
     proxy: { }

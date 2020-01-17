@@ -9,7 +9,7 @@ export class ResultUtil {
         const modal = new ResponseResult<T>();
         modal.data = data;
         modal.code = 200;
-        modal.msg = 'success';
+        modal.msg = '操作成功~';
         return modal;
     }
 

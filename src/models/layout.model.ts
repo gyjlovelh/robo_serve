@@ -26,6 +26,13 @@ const layoutSchema = new Schema({
      * 布局配置详细
      */
     content: String
+}, {
+    timestamps: {
+        createdAt: 'created',
+        updatedAt: 'updated'
+    },
+    versionKey: false
 });
+
 
 export const LayoutModel = model('Layout', layoutSchema);

@@ -7,6 +7,13 @@
 import {Schema, model} from 'mongoose';
 
 const EnumSchema = new Schema({
+    /**
+     * 所属项目
+     */
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
     identify: {
         type: String,
         required: '{PATH} 为必填项！',
@@ -20,6 +27,12 @@ const EnumSchema = new Schema({
         type: Array,
         default: []
     }
+}, {
+    timestamps: {
+        createdAt: 'created',
+        updatedAt: 'updated'
+    },
+    versionKey: false
 });
 
 

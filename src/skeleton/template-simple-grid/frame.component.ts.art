@@ -10,7 +10,7 @@ import {I18nService} from "@orchid_service/i18n";
 import {EnumService, DictionaryService} from "@orchid_service/utils"
 import { {{source.module.identify | cameName}}Service } from "../shared/service/{{source.module.identify}}.service";
 
-/** enum-import */{{each source.columns}}{{set item=$value}}{{if item.filterType==='enum'}}
+/** enum-import */{{each distinct(source.columns, 'type_enumCode')}}{{set item=$value}}{{if item.filterType==='enum'}}
 import { {{item.type_enumCode | cameName}}Enum } from '../../shared/enum/{{item.type_enumCode}}.enum';{{/if}}{{/each}}
 /** dictionary */
 import {DICTIONARY_CONST} from '../../shared/const/dictionary-const';

@@ -3,10 +3,23 @@
  */
 import {NgModule} from "@angular/core";
 import {Route, RouterModule} from "@angular/router";
-import { {{ source.identify | cameName }}Component} from "./{{source.identify}}.component";
+
+/** 引入路由界面 */
+import { {{ source.identify | cameName }}Component} from "./{{source.identify}}.component";{{each source.routerList}}{{set item=$value}}
+import { {{item.identify | cameName}}Component } from './{{item.identify}}/{{item.identify}}.component';{{/each}}
 
 const routes: Array<Route> = [
-
+    {
+        path: '',
+        component: {{source.identify | cameName}}Component,
+        children: [
+            {{if source.routerList && source.routerList.length > 0}}
+            { path: '', pathMatch: 'full', redirectTo: '{{source.routerList[0].path}}' },{{each source.routerList}}{{set item=$value}}
+            /** {{item.name}} */
+            { path: '{{item.path}}', component: {{item.identify | cameName}}Component },{{/each}}
+            {{/if}}
+        ]
+    },
 ];
 
 @NgModule({

@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {TpiService} from "@orchid_service/tpi";
 
 @Component({
-    selector: 'pms-root',
+    selector: '{{source.prefix}}-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
