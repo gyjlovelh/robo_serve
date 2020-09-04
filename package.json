@@ -20,7 +20,7 @@
         "koa-onerror": "^4.1.0",
         "koa-router": "^7.4.0",
         "koa-static": "^5.0.0",
-        "mongodb": "^3.1.10",
+        "mongodb": "^3.1.13",
         "mongoose": "^5.8.4"
     },
     "devDependencies": {
